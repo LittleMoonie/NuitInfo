@@ -10,20 +10,27 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
+
     {
-       Schema::create('users', function (Blueprint $table) {
-           $table->id();
-           $table->string('name');
-           $table->string('prenom');
-           $table->date('birthday');
-           $table->string('email')->unique();
-           $table->timestamp('email_verified_at')->nullable();
-           $table->string('password');
-           $table->unsignedBigInteger('role');
-           $table->boolean('isdeleted')->default(false);
-           $table->timestamps();
-           $table->foreign('role')->references('id')->on('role_enum')->onDelete('cascade');
-       });
+
+        Schema::create('role_enum', function (Blueprint $table) {
+            $table->id();
+            $table->string('role');
+            $table->timestamps();
+        });
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('nom');
+            $table->string('prenom');
+            $table->date('birthday');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->unsignedBigInteger('role');
+            $table->foreign('role')->references('id')->on('role_enum')->onDelete('cascade');
+            $table->boolean('isdeleted')->default(false);
+            $table->timestamps();
+        });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
@@ -46,6 +53,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('role_enum');
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');

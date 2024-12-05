@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 
 
-class User extends Model // are Authenticatable
+class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -20,14 +20,13 @@ class User extends Model // are Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'nom',
         'prenom',
-        'email',
-        'password',
         'birthday',
         'email',
+        'password',
         'role',
-        'isdeleted',
+        'isdeleted'
     ];
 
     /**
@@ -39,25 +38,6 @@ class User extends Model // are Authenticatable
         'password',
         'remember_token',
     ];
-     public function quizzes()
-        {
-            return $this->hasMany(Quiz::class, 'user_creation');
-        }
-
-        public function playedQuizzes()
-        {
-            return $this->hasMany(QuizPlayed::class, 'user_id');
-        }
-
-        public function leaderboard()
-        {
-            return $this->hasOne(Leaderboard::class, 'user_id');
-        }
-
-        public function role()
-        {
-            return $this->belongsTo(RoleEnum::class, 'role');
-        }
 
     /**
      * Get the attributes that should be cast.
@@ -70,5 +50,20 @@ class User extends Model // are Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function quizzesCreated()
+    {
+        return $this->hasMany(Quiz::class, 'user_creation');
+    }
+
+    public function quizPlayed()
+    {
+        return $this->hasMany(QuizPlayed::class);
+    }
+
+    public function leaderboard()
+    {
+        return $this->hasOne(Leaderboard::class);
     }
 }

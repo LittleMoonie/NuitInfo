@@ -14,12 +14,10 @@ return new class extends Migration
         Schema::create('quiz', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->unsignedBigInteger('user_creation');
+            $table->foreignId('user_creation')->constrained('users');
             $table->integer('point');
             $table->boolean('isvalidated')->default(false);
             $table->timestamps();
-
-            $table->foreign('user_creation')->references('id')->on('users')->onDelete('cascade');
         });
 
     }
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('quizzes');
+        Schema::dropIfExists('quiz');
     }
 };

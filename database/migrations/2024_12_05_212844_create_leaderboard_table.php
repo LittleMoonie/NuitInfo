@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('role_enum', function (Blueprint $table) {
+        Schema::create('leaderboard', function (Blueprint $table) {
             $table->id();
-            $table->string('role');
+            $table->foreignId('user_id')->constrained('users');
+            $table->integer('total_score');
+            $table->timestamps();
         });
     }
 
@@ -22,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('role_enums');
+        Schema::dropIfExists('leaderboard');
     }
 };
