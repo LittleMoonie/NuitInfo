@@ -57,29 +57,29 @@ OU
     ```
 ## Base de donées
 
-    ```bash
+```bash
     php artisan migrate  |  Créer la BDD 
-    ```
+```
 
 ## Pré-remplir la base de données
 
-    ```
+```
     php artisan db:seed   | Si les seeder sont créé
-    ```
+   ```
 
 ## Run le projet
 
-    ```bash
+```bash
     composer run dev
-    ```
+```
 
 OU
 
-    ```bash
+```bash
     php artisan serve 
     
     npm run dev
-    ```
+```
 ## API Reference
 
 #### Get all items
