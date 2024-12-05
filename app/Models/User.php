@@ -6,8 +6,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Model;
 
-class User extends Authenticatable
+
+class User extends Model // are Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -19,8 +21,13 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'prenom',
         'email',
         'password',
+        'birthday',
+        'email',
+        'role',
+        'isdeleted',
     ];
 
     /**
@@ -32,6 +39,25 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+     public function quizzes()
+        {
+            return $this->hasMany(Quiz::class, 'user_creation');
+        }
+
+        public function playedQuizzes()
+        {
+            return $this->hasMany(QuizPlayed::class, 'user_id');
+        }
+
+        public function leaderboard()
+        {
+            return $this->hasOne(Leaderboard::class, 'user_id');
+        }
+
+        public function role()
+        {
+            return $this->belongsTo(RoleEnum::class, 'role');
+        }
 
     /**
      * Get the attributes that should be cast.
