@@ -5,6 +5,13 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\QuizController;
+use App\Http\Controllers\Admin\RoleEnumController;
+use App\Http\Controllers\Admin\QuizzAnswerController;
+use App\Http\Controllers\Admin\QuizPlayedController;
+use App\Http\Controllers\Admin\LeaderboardController;
+
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -57,3 +64,12 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('users', UserController::class);
+    Route::resource('quizzes', QuizController::class);
+    Route::resource('roles', RoleEnumController::class);
+    Route::resource('answers', QuizzAnswerController::class);
+    Route::resource('quiz-played', QuizPlayedController::class);
+    Route::resource('leaderboards', LeaderboardController::class);
+});
