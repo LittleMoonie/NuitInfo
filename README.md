@@ -22,7 +22,7 @@ Afin de pouvoir pleinement utiliser le projet, il y a quelques prérequis :
 
 1. Cloner le projet
     ```sh
-    git clone https://github.com/Fat2Nash/ClutchSeries.git
+    git clone https://github.com/LittleMoonie/NuitInfo.git
     ```
 OU
 *Télécharger le projet*
