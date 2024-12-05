@@ -88,19 +88,13 @@ export default function Posts({auth}: Props) {
     const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-        const title = formData.get('title') as string;
-        const content = editingPost?.content || ''; // Directly use content as-is.
-
-        if (!title || !content) {
-            console.error('Title or content is missing.');
-            return;
-        }
+        const content = editingPost?.content || ''; // Use content as raw HTML.
 
         const newPost: Post = {
             id: editingPost ? editingPost.id : Date.now(),
-            title,
-            content, // Save content without escaping
-            poster: auth.user.name,
+            title: formData.get('title') as string || 'Untitled',
+            content, // Save raw content without escaping
+            poster: 'Moonie',
             postedDate: new Date().toISOString().split('T')[0],
         };
 
@@ -137,6 +131,12 @@ export default function Posts({auth}: Props) {
         }
         setShowEmojiPicker((prev) => !prev);
     };
+
+    function unescapeHtml(content: string): string {
+        const textarea = document.createElement('textarea');
+        textarea.innerHTML = content;
+        return textarea.value;
+    }
 
     return (
         <AuthenticatedLayout
@@ -219,7 +219,7 @@ export default function Posts({auth}: Props) {
                                                     title={
                                                         <div
                                                             dangerouslySetInnerHTML={{
-                                                                __html: DOMPurify.sanitize(post.content), // Use sanitized raw content
+                                                                __html: DOMPurify.sanitize(unescapeHtml(post.content)),
                                                             }}
                                                         />
                                                     }
@@ -232,7 +232,7 @@ export default function Posts({auth}: Props) {
                                                             maxWidth: '200px',
                                                         }}
                                                     >
-                                                        {post.content
+                                                        {unescapeHtml(post.content)
                                                             .replace(/<\/?[^>]+(>|$)/g, '')
                                                             .slice(0, 100) + '...'}
                                                     </Typography>
