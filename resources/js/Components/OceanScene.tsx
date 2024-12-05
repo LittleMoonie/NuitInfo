@@ -9,32 +9,46 @@ import { CubeCamera } from "@react-three/drei";
 export default function OceanScene() {
     return (
         <Canvas
-            camera={{ position: [0, 10, 30], fov: 75 }}
-            style={{ backgroundColor: "#87CEEB" }}
+            camera={{position: [0, 10, 30], fov: 75}}
+            style={{backgroundColor: "#000"}}
         >
-        <ambientLight intensity={0.3}/>
+            {/* Lumières */}
             <directionalLight
-                position={[10, 10, 10]}
-                intensity={1.5}
+                position={[0, 30, -50]}
+                intensity={2}
+                color="orange"
                 castShadow
-                shadow-mapSize-width={2048}
-                shadow-mapSize-height={2048}
+            />
+            <ambientLight intensity={0.5}/>
+
+            <Environment
+                files="/assets/industrial_sunset_02_puresky_4k.hdr" // Chemin du fichier HDR
+                background
             />
 
+            {/* Sky pour ajuster les nuances */}
             <Sky
-                sunPosition={[10, 15, -10]}
+                sunPosition={[0, 5, -100]}
                 turbidity={8}
-                rayleigh={3}
+                rayleigh={1}
                 mieCoefficient={0.005}
-                mieDirectionalG={0.8}
+                mieDirectionalG={0.9}
             />
+
 
             <Ocean/>
             {/* Soleil */}
-            <mesh position={[0, 10, -30]}>
-                <sphereGeometry args={[3, 32, 32]}/>
-                <meshStandardMaterial color="orange" emissive="orange"/>
+            <mesh position={[0, 10, -350]}>
+                <sphereGeometry args={[100, 64, 64]}/>
+                <meshStandardMaterial
+                    emissive="#FF5733" // Couleur chaude pour le soleil
+                    emissiveIntensity={5} // Intensité pour le rendre brillant
+                    color="#FF4500"
+                    roughness={0.1}
+                    metalness={0.9}
+                />
             </mesh>
+
 
         </Canvas>
     );
