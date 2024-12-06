@@ -10,6 +10,7 @@ export default function Authenticated({
     children,
 }: PropsWithChildren<{ header?: ReactNode }>) {
     const user = usePage().props.auth.user;
+    console.log(user);
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
@@ -22,7 +23,7 @@ export default function Authenticated({
                         <div className="flex">
                             <div className="flex shrink-0 items-center">
                                 <Link href="/">
-                                    <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
+                                    <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800"/>
                                 </Link>
                             </div>
 
@@ -32,6 +33,34 @@ export default function Authenticated({
                                     active={route().current('dashboard')}
                                 >
                                     Dashboard
+                                </NavLink>
+
+                                <NavLink
+                                    href={route('users')}
+                                    active={route().current('users')}
+                                >
+                                    Users
+                                </NavLink>
+
+                                <NavLink
+                                    href={route('quizzes')}
+                                    active={route().current('quizzes')}
+                                >
+                                    Quizzes
+                                </NavLink>
+
+                                <NavLink
+                                    href={route('posts')}
+                                    active={route().current('posts')}
+                                >
+                                    Posts
+                                </NavLink>
+
+                                <NavLink
+                                    href={route('leaderboard')}
+                                    active={route().current('leaderboard')}
+                                >
+                                    Leaderboard
                                 </NavLink>
                             </div>
                         </div>
@@ -45,7 +74,7 @@ export default function Authenticated({
                                                 type="button"
                                                 className="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
                                             >
-                                                {user.name}
+                                                {user.nom} {user.prenom}
 
                                                 <svg
                                                     className="-me-0.5 ms-2 h-4 w-4"
