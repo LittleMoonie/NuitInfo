@@ -70,10 +70,8 @@ export default function Welcome() {
             {/* Diver Section */}
             <main
                 id="next-section"
-                className="relative h-screen w-full flex flex-col justify-center items-center"
-                style={{
-                    background: "linear-gradient(to bottom, #3a9ed9 0%, #1f6fb2 100%)",
-                }}
+                className="relative h-screen w-full flex flex-col justify-center items-center bg-gradient-to-b from-[#3a9ed9] to-[#1f6fb2]"
+
             >
                 <h2 className="text-white text-3xl md:text-5xl font-bold mb-8 text-center">
                     Explorez les profondeurs
@@ -113,7 +111,7 @@ export default function Welcome() {
 
             <div
                 id="simulation-section"
-                className="h-screen bg-gradient-to-b from-blue-900 to-gray-900 flex flex-col items-center justify-center"
+                className="h-screen bg-gradient-to-b from-[#1f6fb2] to-gray-900 flex flex-col items-center justify-center"
             >
                 <h2 className="text-white text-4xl font-bold mb-4">Simulation Interactive</h2>
                 <div className="w-full h-[600px] relative">
