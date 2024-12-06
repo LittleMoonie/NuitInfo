@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
+use App\Http\Controllers\Api\PostController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -106,5 +107,21 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::prefix('posts')->group(function () {
+    // Route pour récupérer tous les posts
+    Route::get('/', [PostController::class, 'index']);
+
+    // Route pour créer un nouveau post
+    Route::post('/', [PostController::class, 'store']);
+
+    // Route pour récupérer un post spécifique
+    Route::get('{id}', [PostController::class, 'show']);
+
+    // Route pour mettre à jour un post existant
+    Route::put('{id}', [PostController::class, 'update']);
+
+    // Route pour supprimer un post
+    Route::delete('{id}', [PostController::class, 'destroy']);
+});
 
 require __DIR__.'/auth.php';
