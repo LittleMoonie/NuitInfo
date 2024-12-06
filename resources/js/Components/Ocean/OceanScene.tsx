@@ -2,8 +2,7 @@ import React from "react";
 import {Canvas} from "@react-three/fiber";
 import {Sky, OrbitControls} from "@react-three/drei";
 import { Environment } from "@react-three/drei";
-import Ocean from "./Ocean"; // Importez le composant Ocean
-import { CubeCamera } from "@react-three/drei";
+import Ocean from "./Ocean";
 
 
 export default function OceanScene() {

@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect } from "react";
 import { useLoader } from "@react-three/fiber";
 import * as THREE from "three";
@@ -41,7 +40,7 @@ function Ocean() {
     return (
         <mesh ref={ref} rotation={[-Math.PI / 2, 0, 0]}>
             {/* Géométrie */}
-            <planeGeometry args={[300, 300, 256, 256]}/>
+            <planeGeometry args={[300, 300, 128, 128]}/>
 
             {/* CubeCamera pour les reflets */}
             <CubeCamera resolution={256} frames={Infinity}>

@@ -6,6 +6,9 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 import React, {useEffect, useState} from 'react';
 import Recaptcha from './Components/ReCaptcha/Recaptcha';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+
+import theme from './Theme/theme';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -33,13 +36,17 @@ createInertiaApp({
                 return <Recaptcha onSolve={() => setShowRecaptcha(false)} />;
             }
 
-            return <App {...props} />;
+            return <AppWithConditionalRecaptcha />;
         }
 
-        root.render(<AppWithConditionalRecaptcha />);
+        root.render(
+            <ThemeProvider theme={theme}>
+
+                <App {...props} />
+            </ThemeProvider>
+        );
     },
     progress: {
         color: '#4B5563',
     },
 });
-
