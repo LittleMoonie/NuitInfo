@@ -6,6 +6,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Model;
+
 
 class User extends Authenticatable
 {
@@ -18,9 +20,13 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'nom',
+        'prenom',
+        'birthday',
         'email',
         'password',
+        'role',
+        'isdeleted'
     ];
 
     /**
@@ -44,5 +50,20 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function quizzesCreated()
+    {
+        return $this->hasMany(Quiz::class, 'user_creation');
+    }
+
+    public function quizPlayed()
+    {
+        return $this->hasMany(QuizPlayed::class);
+    }
+
+    public function leaderboard()
+    {
+        return $this->hasOne(Leaderboard::class);
     }
 }
