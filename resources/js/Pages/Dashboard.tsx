@@ -17,7 +17,10 @@ import { Quiz, BarChart, WbSunny, Person } from '@mui/icons-material';
 type Props = {
     auth: {
         user: {
-            name: string;
+            id: number;
+            nom: string;
+            prenom: string;
+            email: string;
             score: number;
         };
     };
@@ -44,7 +47,7 @@ export default function Dashboard({ auth, facts }: Props) {
                         <Grid item xs={12}>
                             <Paper elevation={3} sx={{ p: 3, textAlign: 'center', borderRadius: 2 }}>
                                 <Typography variant="h4" color="primary" gutterBottom>
-                                    Welcome, {auth.user.name}!
+                                    Welcome, {auth.user.prenom}!
                                 </Typography>
                                 <Typography variant="body1" color="text.secondary">
                                     Dive into the ocean of knowledge and discover the connections between
@@ -61,7 +64,7 @@ export default function Dashboard({ auth, facts }: Props) {
                                         <Person fontSize="large" />
                                     </Avatar>
                                     <Box>
-                                        <Typography variant="h6">{auth.user.name}</Typography>
+                                        <Typography variant="h6">{auth.user.prenom}</Typography>
                                         <Typography variant="body2" color="text.secondary">
                                             Score: {auth.user.score}
                                         </Typography>

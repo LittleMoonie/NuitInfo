@@ -57,6 +57,62 @@ Route::get('/leaderboard', function(){
     return Inertia::render('Admin/Leaderboard');
 })->middleware(['auth', 'verified'])->name('leaderboard');
 
+Route::get('/about/', function () {
+    return Inertia::render('About/About');
+});
+
+Route::get('/parallels/', function () {
+    return Inertia::render('Parallels/Parallels');
+});
+
+Route::get('/about/', function () {
+    return Inertia::render('About/About');
+});
+
+Route::get('/explore/', function () {
+    return Inertia::render('Explore/Explore');
+});
+
+Route::get('/resources/', function () {
+    return Inertia::render('Resources/Resources');
+});
+
+Route::get('/contact/', function () {
+    return Inertia::render('Contact/Contact');
+});
+
+Route::get('/signin/', function () {
+    return Inertia::render('Auth/SignIn');
+});
+
+Route::get('/share', function () {
+    return Inertia::render('Share/Share');
+});
+
+Route::get('/act', function () {
+    return Inertia::render('Act/Act');
+});
+
+Route::get('/support', function () {
+    return Inertia::render('SupportUs/SupportUs');
+});
+
+Route::get('/privacy-policy', function () {
+    return Inertia::render('PrivacyPolicy/PrivacyPolicy');
+});
+
+Route::get('/terms-of-use', function () {
+    return Inertia::render('TermsOfUse/TermsOfUse');
+});
+
+Route::get('/confidentiality', function () {
+    return Inertia::render('Confidentiality/Confidentiality');
+});
+
+Route::get('/donation', function () {
+    return Inertia::render('Donation/Donation');
+});
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -104,5 +160,3 @@ Route::prefix('admin/leaderboard')->group(function () {
 });
 
 require __DIR__.'/auth.php';
-
-
