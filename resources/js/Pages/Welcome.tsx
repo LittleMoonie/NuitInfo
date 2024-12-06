@@ -136,10 +136,8 @@ export default function Welcome() {
             </div>
             {/* Footer Section */}
             <footer
-                className="relative w-full"
-                style={{
-                    background: "linear-gradient(to bottom, #1f6fb2 0%, #FFB266 40%, #FFB266 100%)",
-                }}
+                className="relative w-full bg-gray-900 "
+
             >
                 <div className="w-full flex flex-col justify-center">
                     <Footer/>
