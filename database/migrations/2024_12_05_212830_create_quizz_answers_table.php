@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('quizz_answer', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('quizz_id')->constrained('quiz');
+            $table->foreignId('quizz_id')->constrained('quizzes');
             $table->text('description');
             $table->boolean('is_response');
             $table->timestamps();

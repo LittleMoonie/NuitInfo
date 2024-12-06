@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import {
@@ -31,11 +32,8 @@ type Quiz = {
 };
 
 export default function Quizzes() {
-    const [quizzes, setQuizzes] = useState<Quiz[]>([
-        { id: 1, title: 'Ocean Quiz', user_creation: 1, point: 20, isvalidated: true },
-    ]);
-
-    const [filteredQuizzes, setFilteredQuizzes] = useState<Quiz[]>(quizzes);
+    const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+    const [filteredQuizzes, setFilteredQuizzes] = useState<Quiz[]>([]);
     const [editingQuiz, setEditingQuiz] = useState<Quiz | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [modalOpen, setModalOpen] = useState(false);
@@ -47,6 +45,26 @@ export default function Quizzes() {
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
+
+    // Appel API pour récupérer les quizzes
+    const fetchQuizzes = async () => {
+        try {
+            const response = await axios.get('/admin/quizzes'); // Assurez-vous que l'URL est correcte
+            setQuizzes(response.data);
+            setFilteredQuizzes(response.data);
+        } catch (error) {
+            console.error('Erreur lors de la récupération des quizzes:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchQuizzes();
+    }, []);
+
+    const refreshFilteredQuizzes = () => {
+        setFilteredQuizzes([...quizzes]);
+        setCurrentPage(1);// Reset to the first page after any update
+    }
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         const query = event.target.value.toLowerCase();
@@ -65,7 +83,7 @@ export default function Quizzes() {
         const quiz: Quiz = {
             id: editingQuiz ? editingQuiz.id : Date.now(),
             title: formData.get('title') as string,
-            user_creation: 1, // Replace with logged-in user ID
+            user_creation: 1, // Remplacez par l'ID de l'utilisateur connecté
             point: parseInt(formData.get('point') as string, 10),
             isvalidated: formData.get('isvalidated') === 'true',
         };
@@ -106,6 +124,7 @@ export default function Quizzes() {
             <Box sx={{ py: 6, bgcolor: 'grey.100' }}>
                 <Container maxWidth="lg">
                     <Paper elevation={3} sx={{ overflow: 'hidden', borderRadius: 2, p: 3 }}>
+                        {/* Header with Search and Add */}
                         <Box
                             sx={{
                                 display: 'flex',
@@ -138,6 +157,7 @@ export default function Quizzes() {
                             </Box>
                         </Box>
 
+                        {/* Quizzes Table */}
                         <TableContainer>
                             <Table>
                                 <TableHead>
@@ -183,6 +203,7 @@ export default function Quizzes() {
                             </Table>
                         </TableContainer>
 
+                        {/* Pagination */}
                         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
                             <Pagination
                                 count={totalPages}
@@ -195,6 +216,7 @@ export default function Quizzes() {
                 </Container>
             </Box>
 
+            {/* Modal for Add/Edit */}
             <CRUDModal
                 open={modalOpen}
                 onClose={() => {
