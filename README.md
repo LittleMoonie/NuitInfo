@@ -1,117 +1,62 @@
+# Race for Water: Ocean and Human Body Parallels Application
 
-# Nuit de l'info 2024
+### Project Overview
+The **Race for Water** foundation, established in 2010 by Swiss entrepreneur Marco Simeoni, is dedicated to ocean conservation. Known for its global "Odyssées" aboard innovative ships, the foundation has been studying the impact of plastic pollution on ecosystems and human health for over a decade. In 2024, Race for Water embarked on a new mission with the MODX 70 catamaran, focusing on oceans and climate change. The goal is to highlight the importance of decarbonizing maritime transport and maintaining healthy oceans.
 
+This project aimed to develop an educational and interactive web application for the Nuit de l'Info 2024. The app explores the fascinating parallels between the human body and the ocean, focusing on how both systems function and how dysfunction in one can affect the other.
 
+### Mission and Objective
+The task was to create a web application illustrating the connections between the human body and the ocean, enabling users to explore these parallels in an engaging and interactive way. The app focuses on key elements of both systems, demonstrating their interdependence, and raises awareness about the importance of ocean preservation.
 
-### Prérequis
+## Key Features:
+- Interactive model showing parallels between the human body and the ocean, such as:
 
-Afin de pouvoir pleinement utiliser le projet, il y a quelques prérequis :
-* Composer : [Installer Composer](https://getcomposer.org/)
-  Pour vérifier la bonne installation de Comoser :
-  ```sh
-  composer
-  ```
-* NodeJS : [Installer Composer](https://nodejs.org/en/download)
-  Pour vérifier la bonne installation de NodeJS :
-  ```sh
-  npm -v
-  ```
+  - Heart = Circulatory System (Ocean currents & Thermohaline pump)
+  - Lungs = Gas Exchange Function (Photosynthesis & CO₂ absorption)
+  - Plankton = Small Marine Life (Immune System)
+  - Coral = Biodiversity (Organs/Defense Mechanisms)
+  - And many more comparisons...
+  
+- Educational descriptions and explanations of each parallel, with multimedia content (audio, video, and podcasts).
 
+- Integration of audio/video content provided via the official Discord server of Nuit de l’Info, including a podcast format with a jingle.
 
-### Installation
+- Easy integration into the Race for Water website, adaptable for events and interactive displays.
 
-1. Cloner le projet
-    ```sh
-    git clone https://github.com/LittleMoonie/NuitInfo.git
-    ```
-OU
-*Télécharger le projet*
+- Mobile-oriented interface, allowing users to access it through QR codes on promotional materials.
 
-2. Installer les packages Composer
-    ```sh
-    composer install
-    ```
-3. Installer les packages NodeJS
-    ```sh
-    npm install
-    ```
-4. Créer une clé d'application
-    ```bash
-    php artisan key:generate
-    ```
-5. Créer le fichier ```.env``` à partir du fichier ```.env.example``` et ajuster si besoin :
-    ```env
-    DB_CONNECTION=sqlite # mettre mysql si besoin de mysql 
-      
-    # DB_HOST=127.0.0.1 ##mettre l'ip du serveur SQL
-      
-    # DB_PORT=3306 #mettre le port d'écoute du serveur SQL
-    
-    # DB_DATABASE=projet #mettre le nom de la base de donnée souhaité
-      
-    # DB_USERNAME=root #mettre le nom d'utilisateur souhaité
-      
-    # DB_PASSWORD= #mettre le mot de passe pour se connecter
-      
-    # DB_COLLATION=utf8mb4_general_ci # pour mysql
-    ```
-## Base de donées
+## App Constraints:
+- Mobile First: Designed for mobile devices, with a landscape view for events.
+- User Accessibility: Easy-to-navigate interface for various audiences.
+- Scalability: Application should be easy to embed and integrate on the foundation’s website or event screens.
+## Development Team
+The project was developed by a dedicated team of developers:
 
-```bash
-    php artisan migrate  |  Créer la BDD 
-```
+- [LittleMoonie](https://github.com/LittleMoonie)
+- [Fat2Nash](https://github.com/Fat2Nash)
+- [LenaGonzalezBreton](https://github.com/LenaGonzalezBreton)
+- [MichelBKT](https://github.com/MichelBKT)
+- [thedarkman195](https://github.com/thedarkman195)
 
-## Pré-remplir la base de données
+## Challenges and Bonuses
+During the Nuit de l'Info 2024, the team participated in several challenges to enhance the project's functionality and user engagement:
 
-```
-    php artisan db:seed   | Si les seeder sont créé
-   ```
+1. **Lyreco Management – "À la chasse au logo!"**
+- Developed an interactive website where a Lyreco logo appears randomly, providing a fun and engaging experience for users.
 
-## Run le projet
+2. **Capgemini Pau – "Cookie Cauchemar"**
+- Created a deliberately frustrating cookie clicker game with a nightmarish user interface, adding a humorous element to the application.
 
-```bash
-    composer run dev
-```
+3. **Viveris – "Game Tcha: le CAPTCHA ludique"**
+- Designed a mini-game inspired by gaming culture to replace traditional CAPTCHAs, making the verification process more engaging.
 
-OU
+4. **Sopra Steria Mérignac – "L'ergonomie : simplifier pour mieux vivre"**
+- Implemented a deliberately complex input field to challenge users, highlighting the importance of user-friendly design.
 
-```bash
-    php artisan serve 
-    
-    npm run dev
-```
-## API Reference
+5. **La French Tech Littoral HDF – "On va jouer à un jeu"**
+- Introduced an innovative gamification system to encourage user interaction and repeat visits to the application.
 
-#### Get all items
+## Conclusion
+By creating this interactive, educational web application, the team aimed to foster a deeper understanding of the crucial role the ocean plays in regulating life on Earth. The project educates users about the vital need to protect the ocean while illustrating the parallels between the ocean's health and the human body's well-being. Through immersive interaction, the team hopes to inspire collective responsibility and encourage actions to protect the ocean, ensuring a healthy planet for future generations.
 
-```http
-  GET /api/items
-```
-
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `api_key` | `string` | **Required**. Your API key |
-
-#### Get item
-
-```http
-  GET /api/items/${id}
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id`      | `string` | **Required**. Id of item to fetch |
-
-#### add(num1, num2)
-
-Takes two numbers and returns the sum.
-
-
-## Authors
-
-- [@Lazaro](https://github.com/LittleMoonie)
-- [@Michel](https://github.com/MichelBKT)
-- [@Lena](https://github.com/LenaGonzalezBreton)
-- [@Alexy](https://github.com/thedarkman195)
-- [@Quentin](https://github.com/Fat2Nash)
-
+### Let's make a splash! 🌊
