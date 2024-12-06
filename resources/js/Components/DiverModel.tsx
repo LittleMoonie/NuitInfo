@@ -97,7 +97,7 @@ function DiverModel() {
     });
 
     return (
-        <group scale={[8, 8, 8]} position={[0, -7, 0]}>
+        <group scale={[7, 7, 7]} position={[0, -5, 0]}>
             <primitive object={obj} />
         </group>
     );
