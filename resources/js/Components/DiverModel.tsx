@@ -4,29 +4,25 @@ import { OBJLoader } from "three-stdlib";
 import * as THREE from "three";
 
 function DiverModel() {
-    const obj = useLoader(OBJLoader, "/assets/scubadiver/Scuba_Diver.obj"); // Chemin vers votre fichier OBJ
+    const obj = useLoader(OBJLoader, "/assets/scubadiver/Scuba_Diver.obj");
     const material = new THREE.MeshStandardMaterial({
-        color: "gray", // Couleur par défaut
-        metalness: 0.3, // Réflectivité
-        roughness: 0.7, // Rugosité
+        color: "gray",
+        metalness: 0.3,
+        roughness: 0.7,
     });
 
-    // Appliquer un matériau par défaut si aucune texture n'est fournie
     obj.traverse((child) => {
         if ((child as THREE.Mesh).isMesh) {
-            (child as THREE.Mesh).material = new THREE.MeshStandardMaterial({
-                color: "gray", // Couleur par défaut
-                metalness: 0.3, // Réflectivité
-                roughness: 0.7, // Rugosité
-            });
+            (child as THREE.Mesh).material = material;
         }
     });
 
     return (
-        <group scale={[0.1, 0.1, 0.1]} position={[0, -5, 0]}>
+        <group scale={[1, 1, 1]} position={[0, 0, 0]}>
             <primitive object={obj}/>
         </group>
     );
 }
+
 
 export default DiverModel;
