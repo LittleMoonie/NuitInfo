@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Quiz extends Model
 {
     use HasFactory;
+
+    protected $table = 'quiz';
     protected $fillable = ['title', 'user_creation', 'point', 'isvalidated'];
 
     public function creator()
