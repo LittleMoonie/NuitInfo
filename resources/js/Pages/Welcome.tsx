@@ -5,8 +5,16 @@ import Navbar from "@/Components/Navbar";
 import BoutonDown from "@/Components/BoutonDown";
 import DiverModel from "@/Components/Diver/DiverModel";
 import Footer from "@/Components/Footer/Footer";
+import Modal from "@/Components/Modal";
+import {useState} from "react"; // Assurez-vous que le chemin est correct
 
 export default function Welcome() {
+    const [modalData, setModalData] = useState<{ title: string; description: string } | null>(null);
+
+    const handlePointClick = (data: { title: string; description: string }) => {
+        setModalData(data);
+    };
+
     return (
         <>
             <Head title="Echoes of Life"/>
@@ -45,13 +53,37 @@ export default function Welcome() {
                     Explorez les profondeurs
                 </h2>
                 <div className="w-full h-2/3 max-w-4xl flex items-center justify-center">
-                    <Canvas camera={{position: [0, 0, 10]}}>
-                        <ambientLight intensity={0.5}/>
-                        <directionalLight position={[10, 10, 5]}/>
-                        <DiverModel/>
+                    <Canvas camera={{ position: [0, 0, 15] }}>
+                        <ambientLight intensity={0.5} />
+                        <directionalLight position={[10, 10, 5]} />
+                        <DiverModel onPointClick={handlePointClick} />
                     </Canvas>
                 </div>
             </main>
+
+            {/* Modale HTML */}
+            {modalData && (
+                <div
+                    style={{
+                        position: "fixed", // Utiliser fixed pour centrer la modale
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        backgroundColor: "rgba(0, 0, 0, 0.5)",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        zIndex: 10,
+                        pointerEvents: "auto", // Permet l'interaction
+                    }}
+                >
+                    <Modal onClose={() => setModalData(null)}>
+                        <h2>{modalData.title}</h2>
+                        <p>{modalData.description}</p>
+                    </Modal>
+                </div>
+            )}
 
             {/* Footer Section */}
             <footer
