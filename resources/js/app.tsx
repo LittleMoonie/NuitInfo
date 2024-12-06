@@ -4,7 +4,8 @@ import './bootstrap';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
-import React, {useEffect, useState} from 'react';
+import React, { useState, useEffect } from 'react';
+import CookieClicker from './Components/CookieClicker/CookieClicker';
 import Recaptcha from './Components/ReCaptcha/Recaptcha';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
@@ -22,21 +23,37 @@ createInertiaApp({
     setup({ el, App, props }) {
         const root = createRoot(el);
 
-        function AppWithConditionalRecaptcha() {
-            const [showRecaptcha, setShowRecaptcha] = useState(false);
+        function AppWithCookieAndRecaptcha() {
+            const [siteLocked, setSiteLocked] = useState(false); // Manages CookieClicker state
+            const [recaptchaSolved, setRecaptchaSolved] = useState(false); // Manages Recaptcha state
+
+            const handleRecaptchaSolve = () => {
+                setRecaptchaSolved(true); // Mark Recaptcha as solved
+            };
+
+            const handleCookieUnlock = () => {
+                setSiteLocked(false); // Unlock site after CookieClicker
+            };
 
             useEffect(() => {
-                const recaptchaSolved = localStorage.getItem('recaptchaSolved');
-                if (!recaptchaSolved) {
-                    setShowRecaptcha(true);
+                // Trigger the CookieClicker if Recaptcha is solved
+                if (recaptchaSolved) {
+                    const timer = setTimeout(() => {
+                        setSiteLocked(true);
+                    }, 1000); // Delay to lock the site with CookieClicker after Recaptcha is solved
+
+                    return () => clearTimeout(timer);
                 }
-            }, []);
+            }, [recaptchaSolved]);
 
-            if (showRecaptcha) {
-                return <Recaptcha onSolve={() => setShowRecaptcha(false)} />;
-            }
+            return (
+                <>
+                    {/* Recaptcha */}
+                    {!recaptchaSolved && <Recaptcha onSolve={handleRecaptchaSolve} />}
 
-            return <AppWithConditionalRecaptcha />;
+                    {/* CookieClicker */}
+                    {recaptchaSolved && siteLocked && <CookieClicker onUnlock={handleCookieUnlock} />}
+                    </>);
         }
 
         root.render(
@@ -50,3 +67,4 @@ createInertiaApp({
         color: '#4B5563',
     },
 });
+
