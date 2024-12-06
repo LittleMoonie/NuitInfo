@@ -71,6 +71,8 @@ const Recaptcha = ({ onSolve }: { onSolve: () => void }) => {
             if (remainingWorms.length === 0) {
                 setMessage('You passed! Enjoy the site!');
                 setTimeout(onSolve, 1000);
+            } else if (remainingWorms.length == 1) {
+                setMessage(`Only 1 worm left!`);
             } else {
                 setMessage(`Great! ${remainingWorms.length} worms left.`);
             }
@@ -79,7 +81,7 @@ const Recaptcha = ({ onSolve }: { onSolve: () => void }) => {
         // Check if the fish eats the hook
         if (hook.x === fishPosition.x && hook.y === fishPosition.y) {
             setMessage('You hit the hook! Resetting...');
-            resetGame();
+            setTimeout(resetGame, 1000);
         }
     }, [fishPosition]);
 
