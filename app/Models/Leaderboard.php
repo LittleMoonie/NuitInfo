@@ -9,6 +9,7 @@ class Leaderboard extends Model
 {
     use HasFactory;
 
+    protected $table = 'leaderboard';
     protected $fillable = ['user_id', 'total_score'];
 
     public function user()

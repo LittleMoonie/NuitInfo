@@ -7,17 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Quiz extends Model
 {
-    use HasFactory;
-    protected $fillable = ['title', 'user_creation', 'point', 'isvalidated'];
+    protected $fillable = ['title', 'description', 'user_creation', 'point', 'isvalidated'];
+
+    public function questions()
+    {
+        return $this->hasMany(QuizQuestion::class);
+    }
 
     public function creator()
     {
         return $this->belongsTo(User::class, 'user_creation');
     }
-
-    public function answers()
-    {
-        return $this->hasMany(QuizzAnswer::class);
-    }
-
 }

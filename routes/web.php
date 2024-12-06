@@ -152,11 +152,28 @@ Route::prefix('admin')->name('admin.')->group(function () {
 //     Route::post('leaderboards', [LeaderboardController::class, 'store']);
 });
 
-Route::prefix('admin/leaderboard')->group(function () {
+Route::prefix('admin/leaderboard')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [LeaderboardController::class, 'index']);
     Route::post('/', [LeaderboardController::class, 'store']);
     Route::put('/{id}', [LeaderboardController::class, 'update']);
     Route::delete('/{id}', [LeaderboardController::class, 'destroy']);
 });
+
+Route::prefix('admin/quizzes')->middleware(['auth', 'verified'])->group(function () {
+    Route::get('/', [QuizController::class, 'index']);
+    Route::post('/', [QuizController::class, 'store']);
+    Route::put('/{id}', [QuizController::class, 'update']);
+    Route::delete('/{id}', [QuizController::class, 'destroy']);
+});
+
+Route::prefix('admin/math-quizzes')->middleware(['auth', 'verified'])->group(function () {
+    Route::get('/', [MathQuizController::class, 'index']);
+    Route::post('/', [MathQuizController::class, 'store']);
+    Route::put('/{id}', [MathQuizController::class, 'update']);
+    Route::delete('/{id}', [MathQuizController::class, 'destroy']);
+});
+
+// Add other quiz types as needed...
+
 
 require __DIR__.'/auth.php';

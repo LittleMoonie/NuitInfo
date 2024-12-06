@@ -5,22 +5,26 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Leaderboard;
-use App\Models\User;
 
 class LeaderboardController extends Controller
 {
-    /**
-     * Display a listing of the leaderboard entries.
-     */
     public function index()
     {
-        $leaderboard = Leaderboard::all();
+        // Eager load user data for the leaderboard
+        $leaderboard = Leaderboard::with('user')->get();
+
+        // Map to add `user_name` combining `nom` and `prenom`
+        $leaderboard = $leaderboard->map(function ($entry) {
+            $entry->user_name = $entry->user
+                ? "{$entry->user->nom} {$entry->user->prenom}"
+                : 'Unknown User';
+            unset($entry->user); // Optional: remove user object
+            return $entry;
+        });
+
         return response()->json($leaderboard);
     }
 
-    /**
-     * Store a newly created leaderboard entry in storage.
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -36,9 +40,6 @@ class LeaderboardController extends Controller
         return response()->json($leaderboard, 201);
     }
 
-    /**
-     * Update the specified leaderboard entry in storage.
-     */
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -55,9 +56,6 @@ class LeaderboardController extends Controller
         return response()->json($leaderboard);
     }
 
-    /**
-     * Remove the specified leaderboard entry from storage.
-     */
     public function destroy($id)
     {
         $leaderboard = Leaderboard::findOrFail($id);
