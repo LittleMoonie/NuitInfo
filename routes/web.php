@@ -63,13 +63,46 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('users', [UserController::class, 'index']);
+//     Route::update('users', [UserController::class, 'update']);
+    Route::delete('users', [UserController::class, 'destroy']);
+    Route::get('users/create', [UserController::class, 'create']);
+    Route::post('users', [UserController::class, 'store']);
+    Route::get('quizzes', [QuizController::class, 'index']);
+//     Route::update('quizzes', [QuizController::class, 'update']);
+    Route::delete('quizzes', [QuizController::class, 'destroy']);
+    Route::get('quizzes/create', [QuizController::class, 'create']);
+    Route::post('quizzes', [QuizController::class, 'store']);
+    Route::get('roles', [RoleEnumController::class, 'index']);
+//     Route::update('roles', [RoleEnumController::class, 'update']);
+    Route::delete('roles', [RoleEnumController::class, 'destroy']);
+    Route::get('roles/create', [RoleEnumController::class, 'create']);
+    Route::post('roles', [RoleEnumController::class, 'store']);
+    Route::get('answers', [QuizzAnswerController::class, 'index']);
+    // Route::put('answers', [QuizzAnswerController::class, 'update']);  // Mise à jour laissée en commentaire
+    Route::delete('answers', [QuizzAnswerController::class, 'destroy']);
+    Route::get('answers/create', [QuizzAnswerController::class, 'create']);
+    Route::post('answers', [QuizzAnswerController::class, 'store']);
+    Route::get('quiz-played', [QuizPlayedController::class, 'index']);
+    // Route::put('quiz-played', [QuizPlayedController::class, 'update']);  // Mise à jour laissée en commentaire
+    Route::delete('quiz-played', [QuizPlayedController::class, 'destroy']);
+    Route::get('quiz-played/create', [QuizPlayedController::class, 'create']);
+    Route::post('quiz-played', [QuizPlayedController::class, 'store']);
+//     Route::get('leaderboards', [LeaderboardController::class, 'index']);
+//     // Route::put('leaderboards', [LeaderboardController::class, 'update']);  // Mise à jour laissée en commentaire
+//     Route::delete('leaderboards', [LeaderboardController::class, 'destroy']);
+//     Route::get('leaderboards/create', [LeaderboardController::class, 'create']);
+//     Route::post('leaderboards', [LeaderboardController::class, 'store']);
+});
+
+Route::prefix('admin/leaderboard')->group(function () {
+    Route::get('/', [LeaderboardController::class, 'index']);
+    Route::post('/', [LeaderboardController::class, 'store']);
+    Route::put('/{id}', [LeaderboardController::class, 'update']);
+    Route::delete('/{id}', [LeaderboardController::class, 'destroy']);
+});
+
 require __DIR__.'/auth.php';
 
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::resource('users', UserController::class);
-    Route::resource('quizzes', QuizController::class);
-    Route::resource('roles', RoleEnumController::class);
-    Route::resource('answers', QuizzAnswerController::class);
-    Route::resource('quiz-played', QuizPlayedController::class);
-    Route::resource('leaderboards', LeaderboardController::class);
-});
+

@@ -2,57 +2,76 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\QuizzAnswer;
-use App\Models\Quiz;
+use App\Models\RoleEnum;
 use Illuminate\Http\Request;
 
-class QuizzAnswerController
+class RoleEnumController
 {
+    // Retourne la liste des rôles sous forme de JSON
     public function index()
     {
-        $answers = QuizzAnswer::with('quiz')->paginate(10);
-        return view('admin.answers.index', compact('answers'));
+        $roles = RoleEnum::paginate(10);
+        return response()->json($roles);  // Retourne les rôles au format JSON
     }
 
+    // Retourne un formulaire pour créer un rôle
     public function create()
     {
-        $quizzes = Quiz::all();
-        return view('admin.answers.create', compact('quizzes'));
+        // Bien que ce soit un formulaire de création, retourner un message JSON si nécessaire
+        return response()->json(['message' => 'Page de création des rôles'], 200);
     }
 
+    // Enregistrer un nouveau rôle dans la base de données
     public function store(Request $request)
     {
+        // Validation des données de la requête
         $validated = $request->validate([
-            'quizz_id' => 'required|exists:quiz,id',
-            'description' => 'required|string',
-            'is_response' => 'required|boolean',
+            'role' => 'required|string|max:255|unique:role_enum,role',
         ]);
 
-        QuizzAnswer::create($validated);
-        return redirect()->route('admin.answers.index')->with('success', 'Réponse créée avec succès.');
+        // Création du rôle dans la base de données
+        $role = RoleEnum::create($validated);
+
+        // Retourne une réponse JSON avec le rôle créé
+        return response()->json([
+            'message' => 'Rôle créé avec succès.',
+            'role' => $role
+        ], 201);  // 201 signifie "créé avec succès"
     }
 
-    public function edit(QuizzAnswer $quizzAnswer)
+    // Retourne le rôle à éditer (en JSON)
+    public function edit(RoleEnum $roleEnum)
     {
-        $quizzes = Quiz::all();
-        return view('admin.answers.edit', compact('quizzAnswer', 'quizzes'));
+        return response()->json($roleEnum);  // Retourne les données du rôle sous forme de JSON
     }
 
-    public function update(Request $request, QuizzAnswer $quizzAnswer)
+    // Met à jour un rôle existant
+    public function update(Request $request, RoleEnum $roleEnum)
     {
+        // Validation des données
         $validated = $request->validate([
-            'quizz_id' => 'required|exists:quiz,id',
-            'description' => 'required|string',
-            'is_response' => 'required|boolean',
+            'role' => 'required|string|max:255|unique:role_enum,role,' . $roleEnum->id,
         ]);
 
-        $quizzAnswer->update($validated);
-        return redirect()->route('admin.answers.index')->with('success', 'Réponse mise à jour avec succès.');
+        // Mise à jour du rôle
+        $roleEnum->update($validated);
+
+        // Retourne une réponse JSON avec le message de succès et les nouvelles données du rôle
+        return response()->json([
+            'message' => 'Rôle mis à jour avec succès.',
+            'role' => $roleEnum
+        ]);
     }
 
-    public function destroy(QuizzAnswer $quizzAnswer)
+    // Supprime un rôle
+    public function destroy(RoleEnum $roleEnum)
     {
-        $quizzAnswer->delete();
-        return redirect()->route('admin.answers.index')->with('success', 'Réponse supprimée avec succès.');
+        // Supprimer le rôle
+        $roleEnum->delete();
+
+        // Retourne une réponse JSON avec un message de succès
+        return response()->json([
+            'message' => 'Rôle supprimé avec succès.'
+        ]);
     }
 }

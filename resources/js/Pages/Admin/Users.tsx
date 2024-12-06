@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import {
@@ -33,19 +34,8 @@ type User = {
 };
 
 export default function Users() {
-    const [users, setUsers] = useState<User[]>([
-        {
-            id: 1,
-            nom: 'Doe',
-            prenom: 'John',
-            birthday: '1990-01-01',
-            email: 'john.doe@example.com',
-            role: 1,
-            isDeleted: false,
-        },
-    ]);
-
-    const [filteredUsers, setFilteredUsers] = useState<User[]>(users);
+    const [users, setUsers] = useState<User[]>([]);
+    const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
     const [editingUser, setEditingUser] = useState<User | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [modalOpen, setModalOpen] = useState(false);
@@ -58,6 +48,22 @@ export default function Users() {
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
+
+    // Call API to fetch users
+    const fetchUsers = async () => {
+        try {
+            const response = await axios.get('/admin/users'); // Change the URL to your API route
+            setUsers(response.data);
+            setFilteredUsers(response.data);
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        }
+    };
+
+    // Fetch users on component mount
+    useEffect(() => {
+        fetchUsers();
+    }, []);
 
     // Function to refresh the filtered users after any change
     const refreshFilteredUsers = () => {
@@ -293,4 +299,3 @@ export default function Users() {
         </AuthenticatedLayout>
     );
 }
-

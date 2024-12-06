@@ -2,55 +2,67 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\Leaderboard;
 use App\Models\User;
-use Illuminate\Http\Request;
 
-class LeaderboardController
+class LeaderboardController extends Controller
 {
+    /**
+     * Display a listing of the leaderboard entries.
+     */
     public function index()
     {
-        $leaderboards = Leaderboard::with('user')->paginate(10);
-        return view('admin.leaderboards.index', compact('leaderboards'));
+        $leaderboard = Leaderboard::all();
+        return response()->json($leaderboard);
     }
 
-    public function create()
-    {
-        $users = User::all();
-        return view('admin.leaderboards.create', compact('users'));
-    }
-
+    /**
+     * Store a newly created leaderboard entry in storage.
+     */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'user_id' => 'required|exists:users,id',
             'total_score' => 'required|integer|min:0',
         ]);
 
-        Leaderboard::create($validated);
-        return redirect()->route('admin.leaderboards.index')->with('success', 'Leaderboard ajouté avec succès.');
+        $leaderboard = Leaderboard::create([
+            'user_id' => $request->user_id,
+            'total_score' => $request->total_score,
+        ]);
+
+        return response()->json($leaderboard, 201);
     }
 
-    public function edit(Leaderboard $leaderboard)
+    /**
+     * Update the specified leaderboard entry in storage.
+     */
+    public function update(Request $request, $id)
     {
-        $users = User::all();
-        return view('admin.leaderboards.edit', compact('leaderboard', 'users'));
-    }
-
-    public function update(Request $request, Leaderboard $leaderboard)
-    {
-        $validated = $request->validate([
+        $request->validate([
             'user_id' => 'required|exists:users,id',
             'total_score' => 'required|integer|min:0',
         ]);
 
-        $leaderboard->update($validated);
-        return redirect()->route('admin.leaderboards.index')->with('success', 'Leaderboard mis à jour avec succès.');
+        $leaderboard = Leaderboard::findOrFail($id);
+        $leaderboard->update([
+            'user_id' => $request->user_id,
+            'total_score' => $request->total_score,
+        ]);
+
+        return response()->json($leaderboard);
     }
 
-    public function destroy(Leaderboard $leaderboard)
+    /**
+     * Remove the specified leaderboard entry from storage.
+     */
+    public function destroy($id)
     {
+        $leaderboard = Leaderboard::findOrFail($id);
         $leaderboard->delete();
-        return redirect()->route('admin.leaderboards.index')->with('success', 'Leaderboard supprimé avec succès.');
+
+        return response()->json(['message' => 'Leaderboard entry deleted successfully.']);
     }
 }

@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+// Importation des modules et bibliothèques nécessaires
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import {
@@ -16,10 +18,13 @@ import {
     Button,
     TextField,
     Pagination,
+    Switch,
+    FormControlLabel,
 } from '@mui/material';
 import { Edit, Delete, Add, Search } from '@mui/icons-material';
-import CRUDModal from '@/Components/Admin/CRUDModal';
+import CRUDModal from "@/Components/Admin/CRUDModal";
 
+// Définition des types pour les entrées du tableau des scores
 type LeaderboardEntry = {
     id: number;
     user_id: number;
@@ -29,42 +34,57 @@ type LeaderboardEntry = {
 type User = {
     id: number;
     name: string;
+    email: string;
+    created_at: string;
+    updated_at: string;
 };
 
-export default function Leaderboard({ users = [] }: { users?: User[] }) {
-    const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([
-        { id: 1, user_id: 1, total_score: 120 },
-        { id: 2, user_id: 2, total_score: 95 },
-    ]);
-
-    const [filteredLeaderboard, setFilteredLeaderboard] = useState<LeaderboardEntry[]>(
-        leaderboard
-    );
+// Définition du composant Leaderboard
+export default function Leaderboard({ users = [] }: { users: User[] }) {
+    // États locaux
+    const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+    const [filteredLeaderboard, setFilteredLeaderboard] = useState<LeaderboardEntry[]>([]);
     const [editingEntry, setEditingEntry] = useState<LeaderboardEntry | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [modalOpen, setModalOpen] = useState(false);
 
+    // Configuration de la pagination
     const itemsPerPage = 5;
-
     const totalPages = Math.ceil(filteredLeaderboard.length / itemsPerPage);
     const displayedLeaderboard = filteredLeaderboard.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
 
+    // Fonction pour récupérer les données du tableau des scores via une requête API
+    const fetchLeaderboard = async () => {
+        try {
+            const response = await axios.get('/admin/leaderboard');
+            setLeaderboard(response.data);
+            setFilteredLeaderboard(response.data);
+        } catch (error) {
+            console.error('Erreur lors de la récupération du tableau des scores :', error);
+        }
+    };
+
+    // Effet pour récupérer les données au montage du composant
+    useEffect(() => {
+        fetchLeaderboard();
+    }, []);
+
+    // Fonction de recherche
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         const query = event.target.value.toLowerCase();
-        const filtered = leaderboard.filter((entry) =>
-            users
-                .find((user) => user.id === entry.user_id)
-                ?.name.toLowerCase()
-                .includes(query)
+        const filtered = leaderboard.filter(
+            (entry) =>
+                users.find((user) => user.id === entry.user_id)?.name.toLowerCase().includes(query)
         );
         setFilteredLeaderboard(filtered);
         setCurrentPage(1);
     };
 
-    const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
+    // Ajout ou mise à jour d'une entrée du tableau des scores
+    const handleSave = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const entry: LeaderboardEntry = {
@@ -75,11 +95,21 @@ export default function Leaderboard({ users = [] }: { users?: User[] }) {
 
         let updatedLeaderboard;
         if (editingEntry) {
-            updatedLeaderboard = leaderboard.map((e) =>
-                e.id === editingEntry.id ? entry : e
-            );
+            // Mise à jour
+            updatedLeaderboard = leaderboard.map((e) => (e.id === editingEntry.id ? entry : e));
+            try {
+                await axios.put(`/admin/leaderboard/${editingEntry.id}`, entry);
+            } catch (error) {
+                console.error('Erreur lors de la mise à jour :', error);
+            }
         } else {
+            // Ajout
             updatedLeaderboard = [...leaderboard, entry];
+            try {
+                await axios.post('/admin/leaderboard', entry);
+            } catch (error) {
+                console.error('Erreur lors de l\'ajout :', error);
+            }
         }
 
         setLeaderboard(updatedLeaderboard);
@@ -88,12 +118,19 @@ export default function Leaderboard({ users = [] }: { users?: User[] }) {
         setEditingEntry(null);
     };
 
-    const handleDelete = (id: number) => {
-        const updatedLeaderboard = leaderboard.filter((entry) => entry.id !== id);
-        setLeaderboard(updatedLeaderboard);
-        setFilteredLeaderboard(updatedLeaderboard);
+    // Suppression d'une entrée du tableau des scores
+    const handleDelete = async (id: number) => {
+        try {
+            await axios.delete(`/admin/leaderboard/${id}`);
+            const updatedLeaderboard = leaderboard.filter((entry) => entry.id !== id);
+            setLeaderboard(updatedLeaderboard);
+            setFilteredLeaderboard(updatedLeaderboard);
+        } catch (error) {
+            console.error('Erreur lors de la suppression :', error);
+        }
     };
 
+    // Rendu du composant
     return (
         <AuthenticatedLayout
             header={
@@ -102,7 +139,7 @@ export default function Leaderboard({ users = [] }: { users?: User[] }) {
                     component="h2"
                     sx={{ fontWeight: 'bold', color: 'gray.800' }}
                 >
-                    Leaderboard Management
+                    Gestion du Tableau des Scores
                 </Typography>
             }
         >
@@ -111,6 +148,7 @@ export default function Leaderboard({ users = [] }: { users?: User[] }) {
             <Box sx={{ py: 6, bgcolor: 'grey.100' }}>
                 <Container maxWidth="lg">
                     <Paper elevation={3} sx={{ overflow: 'hidden', borderRadius: 2, p: 3 }}>
+                        {/* Barre de recherche et bouton d'ajout */}
                         <Box
                             sx={{
                                 display: 'flex',
@@ -120,11 +158,11 @@ export default function Leaderboard({ users = [] }: { users?: User[] }) {
                             }}
                         >
                             <Typography variant="h6" color="text.primary">
-                                Leaderboard
+                                Tableau des Scores
                             </Typography>
                             <Box sx={{ display: 'flex', gap: 2 }}>
                                 <TextField
-                                    placeholder="Search by username..."
+                                    placeholder="Recherche par utilisateur..."
                                     variant="outlined"
                                     size="small"
                                     onChange={handleSearch}
@@ -138,17 +176,18 @@ export default function Leaderboard({ users = [] }: { users?: User[] }) {
                                     startIcon={<Add />}
                                     onClick={() => setModalOpen(true)}
                                 >
-                                    Add Entry
+                                    Ajouter une entrée
                                 </Button>
                             </Box>
                         </Box>
 
+                        {/* Tableau des scores */}
                         <TableContainer>
                             <Table>
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell>User</TableCell>
-                                        <TableCell>Total Score</TableCell>
+                                        <TableCell>Utilisateur</TableCell>
+                                        <TableCell>Score Total</TableCell>
                                         <TableCell align="right">Actions</TableCell>
                                     </TableRow>
                                 </TableHead>
@@ -160,7 +199,7 @@ export default function Leaderboard({ users = [] }: { users?: User[] }) {
                                                     {
                                                         (users.find(
                                                             (user) => user.id === entry.user_id
-                                                        ) || { name: 'Unknown User' }).name
+                                                        ) || { name: 'Utilisateur inconnu' }).name
                                                     }
                                                 </TableCell>
                                                 <TableCell>{entry.total_score}</TableCell>
@@ -186,7 +225,7 @@ export default function Leaderboard({ users = [] }: { users?: User[] }) {
                                     ) : (
                                         <TableRow>
                                             <TableCell colSpan={3} align="center">
-                                                No leaderboard entries found.
+                                                Aucune entrée trouvée.
                                             </TableCell>
                                         </TableRow>
                                     )}
@@ -194,6 +233,7 @@ export default function Leaderboard({ users = [] }: { users?: User[] }) {
                             </Table>
                         </TableContainer>
 
+                        {/* Pagination */}
                         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
                             <Pagination
                                 count={totalPages}
@@ -206,18 +246,19 @@ export default function Leaderboard({ users = [] }: { users?: User[] }) {
                 </Container>
             </Box>
 
+            {/* Modale pour ajout/édition */}
             <CRUDModal
                 open={modalOpen}
                 onClose={() => {
                     setModalOpen(false);
                     setEditingEntry(null);
                 }}
-                title={editingEntry ? 'Edit Entry' : 'Add Entry'}
+                title={editingEntry ? 'Modifier une entrée' : 'Ajouter une entrée'}
                 onSubmit={handleSave}
             >
                 <TextField
                     name="user_id"
-                    label="User ID"
+                    label="ID Utilisateur"
                     type="number"
                     defaultValue={editingEntry?.user_id || ''}
                     fullWidth
@@ -225,7 +266,7 @@ export default function Leaderboard({ users = [] }: { users?: User[] }) {
                 />
                 <TextField
                     name="total_score"
-                    label="Total Score"
+                    label="Score Total"
                     type="number"
                     defaultValue={editingEntry?.total_score || ''}
                     fullWidth

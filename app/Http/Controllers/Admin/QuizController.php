@@ -8,18 +8,21 @@ use Illuminate\Http\Request;
 
 class QuizController
 {
+    // Retourne la liste des quizzes au format JSON
     public function index()
     {
-        $quizzes = Quiz::with('creator')->paginate(10);
-        return view('admin.quizzes.index', compact('quizzes'));
+        $quizzes = Quiz::all();
+        return response()->json($quizzes);  // Retourne les quizzes avec leurs créateurs associés
     }
 
+    // Retourne les informations nécessaires pour créer un quiz (utilisateurs)
     public function create()
     {
         $users = User::all();
-        return view('admin.quizzes.create', compact('users'));
+        return response()->json(['users' => $users]);
     }
 
+    // Enregistre un nouveau quiz dans la base de données
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -28,16 +31,25 @@ class QuizController
             'point' => 'required|integer|min:0',
         ]);
 
-        Quiz::create($validated);
-        return redirect()->route('admin.quizzes.index')->with('success', 'Quiz créé avec succès.');
+        $quiz = Quiz::create($validated);
+
+        return response()->json([
+            'message' => 'Quiz créé avec succès.',
+            'quiz' => $quiz
+        ], 201);  // 201 signifie "créé avec succès"
     }
 
+    // Retourne les informations nécessaires pour éditer un quiz
     public function edit(Quiz $quiz)
     {
         $users = User::all();
-        return view('admin.quizzes.edit', compact('quiz', 'users'));
+        return response()->json([
+            'quiz' => $quiz,
+            'users' => $users
+        ]);
     }
 
+    // Met à jour un quiz existant
     public function update(Request $request, Quiz $quiz)
     {
         $validated = $request->validate([
@@ -47,12 +59,20 @@ class QuizController
         ]);
 
         $quiz->update($validated);
-        return redirect()->route('admin.quizzes.index')->with('success', 'Quiz mis à jour avec succès.');
+
+        return response()->json([
+            'message' => 'Quiz mis à jour avec succès.',
+            'quiz' => $quiz
+        ]);
     }
 
+    // Supprime un quiz
     public function destroy(Quiz $quiz)
     {
         $quiz->delete();
-        return redirect()->route('admin.quizzes.index')->with('success', 'Quiz supprimé avec succès.');
+
+        return response()->json([
+            'message' => 'Quiz supprimé avec succès.'
+        ]);
     }
 }
