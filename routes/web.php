@@ -16,12 +16,6 @@ Route::get('/', function () {
 
 Route::get('/dashboard/', function () {
 return Inertia::render('Dashboard', [
-        'auth' => [
-            'user' => [
-                'name' => auth()->user()->name,
-                'score' => 85, // Example score
-            ],
-        ],
         'facts' => [
             'The ocean produces over 50% of the world’s oxygen.',
             'Human lungs function similarly to coral reefs in filtering and supporting life.',
