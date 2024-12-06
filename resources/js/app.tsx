@@ -1,11 +1,15 @@
 import '../css/app.css';
 import './bootstrap';
+
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 import React, { useState, useEffect } from 'react';
 import CookieClicker from './Components/CookieClicker/CookieClicker';
-import Recaptcha from './Components/ReCaptcha/Recaptcha'; // Import the Recaptcha component
+import Recaptcha from './Components/ReCaptcha/Recaptcha';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+
+import theme from './Theme/theme';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -49,18 +53,18 @@ createInertiaApp({
 
                     {/* CookieClicker */}
                     {recaptchaSolved && siteLocked && <CookieClicker onUnlock={handleCookieUnlock} />}
-
-                    {/* Main Content */}
-                    <div className={`main-content ${siteLocked || !recaptchaSolved ? 'blurred' : ''}`}>
-                        <App {...props} />
-                    </div>
-                </>
-            );
+                    </>);
         }
 
-        root.render(<AppWithCookieAndRecaptcha />);
+        root.render(
+            <ThemeProvider theme={theme}>
+
+                <App {...props} />
+            </ThemeProvider>
+        );
     },
     progress: {
         color: '#4B5563',
     },
 });
+
